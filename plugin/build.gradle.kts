@@ -40,8 +40,8 @@ bukkit {
 
     commands {
         register("correio") {
-            description = "Opens up the mailman GUI."
-            permission = "mailman.command"
+            description = "Abre o menu do correio"
+            aliases = listOf("correios")
         }
     }
 }

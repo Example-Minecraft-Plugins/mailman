@@ -6,6 +6,7 @@ import me.davipccunha.tests.mailman.command.subcommand.EnviarSubCommand;
 import me.davipccunha.tests.mailman.command.subcommand.VerSubCommand;
 import me.davipccunha.tests.mailman.factory.view.MailboxGUI;
 import me.davipccunha.tests.mailman.model.Mailbox;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -50,13 +51,7 @@ public class CorreioCommand implements CommandExecutor {
         final Player player = (Player) sender;
 
         if (args.length == 0) {
-            final Mailbox mailbox = this.plugin.getMailboxCache().get(player.getName());
-            if (mailbox == null) {
-                player.sendMessage("§cOcorreu um erro. Por favor contate nossa equipe.");
-                return true;
-            }
-
-            player.openInventory(MailboxGUI.createMailboxGUI(mailbox, false));
+            Bukkit.dispatchCommand(player, "correio ver " + player.getName());
             return true;
         }
 
