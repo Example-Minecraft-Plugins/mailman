@@ -34,7 +34,7 @@ public class VerSubCommand implements CorreioSubCommand {
             return true;
         }
 
-        if (!player.hasPermission("mailman.admin")) {
+        if (!player.hasPermission("mailman.admin.see")) {
             player.sendMessage("§cVocê não tem permissão para executar este comando.");
             return true;
         }

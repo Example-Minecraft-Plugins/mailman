@@ -16,7 +16,7 @@ public class EnviarSubCommand implements CorreioSubCommand {
     public boolean execute(Player player, String[] args) {
         final RedisCache<Mailbox> cache = this.plugin.getMailboxCache();
 
-        if (!player.hasPermission("mailman.admin")) {
+        if (!player.hasPermission("mailman.admin.send")) {
             player.sendMessage("§cVocê não tem permissão para executar este comando.");
             return true;
         }
