@@ -15,7 +15,7 @@ public class MailmanProvider implements MailmanAPI {
 
     @Override
     public void addItem(String name, ItemStack item) {
-        Mailbox mailbox = this.cache.get(name);
+        Mailbox mailbox = this.cache.get(name.toLowerCase());
 
         if (mailbox == null)
             mailbox = new Mailbox(name);
@@ -28,23 +28,23 @@ public class MailmanProvider implements MailmanAPI {
     public void addItemToAll(ItemStack item) {
         for (Mailbox mailbox : cache.getValues()) {
             mailbox.addItem(item);
-            cache.add(mailbox.getOwner(), mailbox);
+            cache.add(mailbox.getOwner().toLowerCase(), mailbox);
         }
     }
 
     @Override
     public void removeItem(String name, ItemStack item) {
-        Mailbox mailbox = this.cache.get(name);
+        final Mailbox mailbox = this.cache.get(name.toLowerCase());
 
         if (mailbox == null) return;
 
         mailbox.removeItem(item);
-        cache.add(name, mailbox);
+        cache.add(name.toLowerCase(), mailbox);
     }
 
     @Override
     public @Nullable Collection<ItemStack> getItems(String name) {
-        Mailbox mailbox = this.cache.get(name);
+        final Mailbox mailbox = this.cache.get(name.toLowerCase());
 
         if (mailbox == null) return null;
 
@@ -53,17 +53,17 @@ public class MailmanProvider implements MailmanAPI {
 
     @Override
     public void clear(String name) {
-        Mailbox mailbox = this.cache.get(name);
+        final Mailbox mailbox = this.cache.get(name.toLowerCase());
 
         if (mailbox == null) return;
 
         mailbox.clearItems();
-        cache.add(name, mailbox);
+        cache.add(name.toLowerCase(), mailbox);
     }
 
     @Override
     public boolean isMailboxEmpty(String name) {
-        Mailbox mailbox = this.cache.get(name);
+        Mailbox mailbox = this.cache.get(name.toLowerCase());
 
         return mailbox == null || mailbox.isEmpty();
     }

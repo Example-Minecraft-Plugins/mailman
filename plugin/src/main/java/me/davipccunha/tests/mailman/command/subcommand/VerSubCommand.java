@@ -5,6 +5,7 @@ import me.davipccunha.tests.mailman.MailmanPlugin;
 import me.davipccunha.tests.mailman.factory.view.MailboxGUI;
 import me.davipccunha.tests.mailman.model.Mailbox;
 import me.davipccunha.utils.cache.RedisCache;
+import me.davipccunha.utils.messages.ErrorMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -21,12 +22,12 @@ public class VerSubCommand implements CorreioSubCommand {
             return true;
         }
 
-        final String target = args[1];
+        final String target = args[1].toLowerCase();
 
-        if (target.equals(player.getName())) {
-            final Mailbox ownMailbox = cache.get(target);
+        if (target.equals(player.getName().toLowerCase())) {
+            final Mailbox ownMailbox = cache.get(target.toLowerCase());
             if (ownMailbox == null) {
-                player.sendMessage("§cJogador não encontrado.");
+                player.sendMessage(ErrorMessages.INTERNAL_ERROR.getMessage());
                 return true;
             }
 
@@ -35,14 +36,14 @@ public class VerSubCommand implements CorreioSubCommand {
         }
 
         if (!player.hasPermission("mailman.admin.see")) {
-            player.sendMessage("§cVocê não tem permissão para executar este comando.");
+            player.sendMessage(ErrorMessages.NO_PERMISSION.getMessage());
             return true;
         }
 
         final Mailbox mailbox = cache.get(target);
 
         if (mailbox == null) {
-            player.sendMessage("§cJogador não encontrado.");
+            player.sendMessage(ErrorMessages.PLAYER_NOT_FOUND.getMessage());
             return true;
         }
 
@@ -53,6 +54,6 @@ public class VerSubCommand implements CorreioSubCommand {
 
     @Override
     public String getUsage() {
-        return "§e/correio ver <jogador>";
+        return "/correio ver <jogador>";
     }
 }

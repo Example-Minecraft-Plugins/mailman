@@ -13,12 +13,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class PlayerJoinListener implements Listener {
     private final MailmanPlugin plugin;
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onPlayerJoin(PlayerJoinEvent event) {
         final RedisCache<Mailbox> mailboxCache = plugin.getMailboxCache();
         final String playerName = event.getPlayer().getName();
 
-        if (mailboxCache.get(playerName) == null)
-            mailboxCache.add(playerName, new Mailbox(playerName));
+        if (mailboxCache.get(playerName.toLowerCase()) == null)
+            mailboxCache.add(playerName.toLowerCase(), new Mailbox(playerName));
     }
 }

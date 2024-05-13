@@ -6,6 +6,7 @@ import me.davipccunha.tests.mailman.command.subcommand.EnviarSubCommand;
 import me.davipccunha.tests.mailman.command.subcommand.VerSubCommand;
 import me.davipccunha.tests.mailman.factory.view.MailboxGUI;
 import me.davipccunha.tests.mailman.model.Mailbox;
+import me.davipccunha.utils.messages.ErrorMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,15 +24,14 @@ public class CorreioCommand implements CommandExecutor {
     public CorreioCommand(MailmanPlugin plugin) {
         this.plugin = plugin;
 
-        this.subCommands.put("enviar", new EnviarSubCommand(plugin));
-        this.subCommands.put("ver", new VerSubCommand(plugin));
+        this.loadSubCommands();
 
         this.updateUsage();
     }
 
     private void updateUsage() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("§e/correio [");
+        stringBuilder.append("§c/correio [");
         for (String subCommand : this.subCommands.keySet()) {
             stringBuilder.append(subCommand).append(" | ");
         }
@@ -44,7 +44,7 @@ public class CorreioCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("§cApenas jogadores podem executar este comando.");
+            sender.sendMessage(ErrorMessages.EXECUTOR_NOT_PLAYER.getMessage());
             return false;
         }
 
@@ -55,10 +55,10 @@ public class CorreioCommand implements CommandExecutor {
             return true;
         }
 
-        CorreioSubCommand subCommand = this.subCommands.get(args[0]);
+        final CorreioSubCommand subCommand = this.subCommands.get(args[0]);
 
         if (subCommand == null) {
-            sender.sendMessage("§cSubcomando não encontrado.");
+            sender.sendMessage(ErrorMessages.SUBCOMMAND_NOT_FOUND.getMessage());
             sender.sendMessage("§cUso: " + COMMAND_USAGE);
             return false;
         }
@@ -69,5 +69,10 @@ public class CorreioCommand implements CommandExecutor {
         }
 
         return true;
+    }
+
+    private void loadSubCommands() {
+        this.subCommands.put("enviar", new EnviarSubCommand(plugin));
+        this.subCommands.put("ver", new VerSubCommand(plugin));
     }
 }

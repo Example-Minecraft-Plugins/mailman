@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.davipccunha.tests.mailman.MailmanPlugin;
 import me.davipccunha.tests.mailman.model.Mailbox;
 import me.davipccunha.utils.cache.RedisCache;
+import me.davipccunha.utils.messages.ErrorMessages;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,16 +18,13 @@ public class EnviarSubCommand implements CorreioSubCommand {
         final RedisCache<Mailbox> cache = this.plugin.getMailboxCache();
 
         if (!player.hasPermission("mailman.admin.send")) {
-            player.sendMessage("§cVocê não tem permissão para executar este comando.");
+            player.sendMessage(ErrorMessages.NO_PERMISSION.getMessage());
             return true;
         }
 
-        if (args.length < 2) {
-            player.sendMessage("§cInforme o jogador que deseja enviar o item.");
-            return false;
-        }
+        if (args.length < 2) return false;
 
-        final String target = args[1];
+        final String target = args[1].toLowerCase();
         final Mailbox mailbox = cache.get(target);
 
         final ItemStack item = player.getItemInHand();
@@ -43,14 +41,14 @@ public class EnviarSubCommand implements CorreioSubCommand {
         }
 
         if (mailbox == null) {
-            player.sendMessage("§cJogador não encontrado.");
+            player.sendMessage(ErrorMessages.PLAYER_NOT_FOUND.getMessage());
             return true;
         }
 
         mailbox.addItem(item);
         cache.add(target, mailbox);
 
-        player.sendMessage(String.format("§aItem enviado para o correio de §f%s §acom sucesso.", target));
+        player.sendMessage(String.format("§aItem enviado para o correio de §f%s §acom sucesso.", mailbox.getOwner()));
 
         return true;
     }
@@ -59,12 +57,12 @@ public class EnviarSubCommand implements CorreioSubCommand {
         final RedisCache<Mailbox> cache = this.plugin.getMailboxCache();
         for (Mailbox mailbox : cache.getValues()) {
             mailbox.addItem(item);
-            cache.add(mailbox.getOwner(), mailbox);
+            cache.add(mailbox.getOwner().toLowerCase(), mailbox);
         }
     }
 
     @Override
     public String getUsage() {
-        return "§e/correio enviar <jogador>";
+        return "/correio enviar <jogador>";
     }
 }
