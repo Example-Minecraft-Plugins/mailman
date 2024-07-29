@@ -2,6 +2,7 @@ package me.davipccunha.tests.mailman.factory.view;
 
 import me.davipccunha.tests.mailman.model.Mailbox;
 import me.davipccunha.utils.inventory.InteractiveInventory;
+import me.davipccunha.utils.inventory.InventoryUtil;
 import me.davipccunha.utils.item.ItemName;
 import me.davipccunha.utils.item.ItemSerializer;
 import org.bukkit.Bukkit;
@@ -11,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +23,7 @@ public class MailboxGUI {
 
         if (items == null || items.isEmpty()) return createEmptyMailbox();
 
-        final List<ItemStack> firstPage = separateIntoPages(items, 36).get(0);
+        final List<ItemStack> firstPage = InventoryUtil.separateIntoPages(items, 36).get(0);
 
         final List<String> mailboxItemLore = adminView ?
                 List.of("§7 Clique para remover este item") :
@@ -67,17 +67,6 @@ public class MailboxGUI {
         }
 
         return inventory;
-    }
-
-    private static Map<Integer, List<ItemStack>> separateIntoPages(Collection<ItemStack> items, int pageSize) {
-        final Map<Integer, List<ItemStack>> pages = new HashMap<>();
-
-        for (int i = 0; i < items.size(); i += pageSize) {
-            final List<ItemStack> page = List.copyOf(items).subList(i, Math.min(i + pageSize, items.size()));
-            pages.put(i / pageSize, page);
-        }
-
-        return pages;
     }
 
     private static Inventory createEmptyMailbox() {
